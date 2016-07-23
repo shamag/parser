@@ -1,28 +1,28 @@
 import express from 'express';
 import validate from 'express-validation';
 import paramValidation from '../../config/param-validation';
-import userCtrl from '../controllers/user';
+import convCtrl from '../controllers/conversation';
 
 const router = express.Router();	// eslint-disable-line new-cap
 
 router.route('/')
-  /** GET /api/users - Get list of users */
-  .get(userCtrl.list)
+/** GET /api/users - Get list of users */
+  .get(convCtrl.list)
 
   /** POST /api/users - Create new user */
-  .post(validate(paramValidation.createUser), userCtrl.create);
+  .post(validate(paramValidation.createUser), convCtrl.create);
 
-router.route('/:userId')
-  /** GET /api/users/:userId - Get user */
-  .get(userCtrl.get)
+router.route('/:convId')
+/** GET /api/users/:userId - Get user */
+  .get(convCtrl.get)
 
   /** PUT /api/users/:userId - Update user */
-  .put(validate(paramValidation.updateUser), userCtrl.update)
+  .put(validate(paramValidation.updateUser), convCtrl.update)
 
   /** DELETE /api/users/:userId - Delete user */
-  .delete(userCtrl.remove);
+  .delete(convCtrl.remove);
 
 /** Load user when API with userId route parameter is hit */
-router.param('userId', userCtrl.load);
+router.param('convId', convCtrl.load);
 
 export default router;

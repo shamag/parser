@@ -2,24 +2,61 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
-
 /**
  * User Schema
  */
-const UserSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true
-  },
-  mobileNumber: {
+const ConversationSchema = new mongoose.Schema({
+  profile: {
     type: String,
     required: true,
-    match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
+  },
+  author: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+  },
+  type: {
+    type: String,
+    enum: ['pm', 'project'],
+    default: 'project',
   },
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  updatedAt: {
+    type: Date,
+  },
+  projectId: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  projectName: {
+    type: String,
+    required: true
+  },
+  lastMessage: {
+    type: Date,
+    default: Date.now
+  },
+  messageCount: {
+    type: Number,
+    default: 0,
+  },
+  lastAnswer: {
+    type: Boolean,
+    default: false,
+  },
+  notes: {
+    type: String, default: ''
+  },
+  isRead: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 /**
@@ -29,16 +66,23 @@ const UserSchema = new mongoose.Schema({
  * - virtuals
  */
 
+ConversationSchema.pre('save', function (next) {
+  // get the current date
+  const currentDate = new Date();
+  // change the updated_at field to current date
+  this.updated_at = currentDate;
+  next();
+});
+
 /**
  * Methods
  */
-UserSchema.method({
-});
+ConversationSchema.method({});
 
 /**
  * Statics
  */
-UserSchema.statics = {
+ConversationSchema.statics = {
   /**
    * Get user
    * @param {ObjectId} id - The objectId of user.
@@ -71,6 +115,6 @@ UserSchema.statics = {
 };
 
 /**
- * @typedef User
+ * @typedef Conversation
  */
-export default mongoose.model('User', UserSchema);
+export default mongoose.model('Conversation', ConversationSchema);

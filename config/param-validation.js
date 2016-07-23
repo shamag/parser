@@ -4,8 +4,10 @@ export default {
   // POST /api/users
   createUser: {
     body: {
-      username: Joi.string().required(),
-      mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
+      profile: Joi.string().required(),
+      author: Joi.string().required(),
+      projectId: Joi.string().required(),
+      projectName: Joi.string().required()
     }
   },
 

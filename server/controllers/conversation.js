@@ -1,11 +1,11 @@
-import User from '../models/user';
+import Conversation from '../models/conversation';
 
 /**
  * Load user and append to req.
  */
 function load(req, res, next, id) {
-  User.get(id).then((user) => {
-    req.user = user;		// eslint-disable-line no-param-reassign
+  Conversation.get(id).then((conv) => {
+    req.conv = conv;		// eslint-disable-line no-param-reassign
     return next();
   }).error((e) => next(e));
 }
@@ -15,7 +15,7 @@ function load(req, res, next, id) {
  * @returns {User}
  */
 function get(req, res) {
-  return res.json(req.user);
+  return res.json(req.conv);
 }
 
 /**
@@ -25,12 +25,14 @@ function get(req, res) {
  * @returns {User}
  */
 function create(req, res, next) {
-  const user = new User({
-    username: req.body.username,
-    mobileNumber: req.body.mobileNumber
+  const conv = new Conversation({
+    profile: req.body.profile,
+    author: req.body.author,
+    projectId: req.body.projectId,
+    projectName: req.body.projectName
   });
 
-  user.saveAsync()
+  conv.saveAsync()
     .then((savedUser) => res.json(savedUser))
     .error((e) => next(e));
 }
@@ -42,11 +44,12 @@ function create(req, res, next) {
  * @returns {User}
  */
 function update(req, res, next) {
-  const user = req.user;
-  user.username = req.body.username;
-  user.mobileNumber = req.body.mobileNumber;
-
-  user.saveAsync()
+  const conv = req.conv;
+  conv.profile = req.body.profile;
+  conv.author = req.body.author;
+  conv.projectId = req.body.projectId;
+  conv.projectName = req.body.projectName;
+  conv.saveAsync()
     .then((savedUser) => res.json(savedUser))
     .error((e) => next(e));
 }
@@ -59,7 +62,7 @@ function update(req, res, next) {
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  User.list({ limit, skip }).then((users) =>	res.json(users))
+  Conversation.list({ limit, skip }).then((convs) =>	res.json(convs))
     .error((e) => next(e));
 }
 
@@ -68,8 +71,8 @@ function list(req, res, next) {
  * @returns {User}
  */
 function remove(req, res, next) {
-  const user = req.user;
-  user.removeAsync()
+  const conv = req.conv;
+  conv.removeAsync()
     .then((deletedUser) => res.json(deletedUser))
     .error((e) => next(e));
 }
