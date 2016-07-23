@@ -61,7 +61,6 @@
     "babel-preset-es2015": "6.5.0",
     "babel-preset-stage-2": "6.5.0",
     "chai": "^3.4.1",
-    "commitizen": "^2.8.2",
     "coveralls": "^2.11.6",
     "cz-conventional-changelog": "1.1.5",
     "del": "^2.2.0",
@@ -90,8 +89,7 @@
   "license": "MIT",
   "config": {
     "ghooks": {
-      "pre-commit": "npm run lint",
-      "commit-msg": "validate-commit-msg"
+      "pre-commit": "npm run lint"
     },
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
