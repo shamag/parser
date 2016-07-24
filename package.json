@@ -12,6 +12,7 @@
   "scripts": {
     "start": "gulp serve",
     "build": "gulp",
+    "parser": "node parser",
     "lint": "gulp lint",
     "test": "gulp mocha",
     "commit": "git-cz",
@@ -37,6 +38,7 @@
   "dependencies": {
     "bluebird": "^3.1.4",
     "body-parser": "^1.14.2",
+    "cheerio": "^0.20.0",
     "compression": "^1.6.1",
     "cookie-parser": "^1.4.1",
     "cors": "^2.7.1",
@@ -51,7 +53,9 @@
     "method-override": "^2.3.5",
     "mongoose": "^4.3.7",
     "morgan": "1.7.0",
+    "needle": "^1.0.0",
     "pug": "^2.0.0-beta4",
+    "tress": "^1.0.3",
     "winston": "^2.1.1"
   },
   "devDependencies": {

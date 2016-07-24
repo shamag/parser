@@ -9,8 +9,8 @@ import * as isparta from 'isparta';
 const plugins = gulpLoadPlugins();
 
 const paths = {
-  js: ['./**/*.js', '!dist/**', '!node_modules/**', '!coverage/**'],
-  nonJs: ['./package.json', './.gitignore'],
+  js: ['./**/*.js','*.pug' ,'!dist/**', '!node_modules/**', '!coverage/**'],
+  nonJs: ['./package.json', './**/*.pug','./.gitignore'],
   tests: './server/tests/*.js'
 };
 
@@ -79,7 +79,7 @@ gulp.task('nodemon', [/* 'lint',*/'copy', 'babel'], () =>
   plugins.nodemon({
     script: path.join('dist', 'index.js'),
     ext: 'js',
-    ignore: ['node_modules/**/*.js', 'dist/**/*.js'],
+    ignore: ['node_modules/**/*.js', 'dist/**/*.js','parser.js'],
     tasks: [/* 'lint', */'copy', 'babel']
   })
 );

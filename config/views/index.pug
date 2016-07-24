@@ -1,0 +1,22 @@
+
+
+extends layout
+block head
+  title='FL не отвеченное'
+block content
+  div(class='container')
+    if (status=='0')
+      div(class='status-ok') Статус:OK
+    else
+      div(class='status-error') Статус: Ошибка
+
+    h1= title
+    table(class="conversations-table table-bordered table-condensed")
+      tr
+        th Номер
+        th Название проекта
+        th Пользователь
+        th Ссылка
+        th Дата
+        th Пометка
+        th Прочитано

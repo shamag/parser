@@ -25,16 +25,31 @@ function get(req, res) {
  * @returns {User}
  */
 function create(req, res, next) {
-  const conv = new Conversation({
-    profile: req.body.profile,
-    author: req.body.author,
-    projectId: req.body.projectId,
-    projectName: req.body.projectName
+  Conversation.findOne({projectId: req.body.projectId}).execAsync().then(function(exConv){
+    if (!exConv){
+      const conv = new Conversation({
+        profile: req.body.profile,
+        author: req.body.author,
+        projectId: req.body.projectId,
+        projectName: req.body.projectName
+      });
+
+      conv.saveAsync()
+        .then((savedUser) => res.json(savedUser))
+        .error((e) => next(e));
+    } else {
+        exConv.profile = req.body.profile;
+        exConv.author = req.body.author;
+        exConv.projectName = req.body.projectName;
+
+      exConv.saveAsync()
+        .then((savedUser) => res.json(savedUser))
+        .error((e) => next(e));
+    }
+
+
   });
 
-  conv.saveAsync()
-    .then((savedUser) => res.json(savedUser))
-    .error((e) => next(e));
 }
 
 /**
@@ -45,10 +60,17 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const conv = req.conv;
+  //console.log(req);
+  if (req.body.profile)
   conv.profile = req.body.profile;
+  if (req.body.author)
   conv.author = req.body.author;
+  if (req.body.projectId)
   conv.projectId = req.body.projectId;
+  if (req.body.projectName)
   conv.projectName = req.body.projectName;
+  if (req.body.lastAnswer)
+    conv.lastAnswer = req.body.lastAnswer;
   conv.saveAsync()
     .then((savedUser) => res.json(savedUser))
     .error((e) => next(e));

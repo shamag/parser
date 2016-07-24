@@ -16,6 +16,7 @@ const ConversationSchema = new mongoose.Schema({
   },
   link: {
     type: String,
+    default:'',
   },
   type: {
     type: String,
@@ -70,7 +71,7 @@ ConversationSchema.pre('save', function (next) {
   // get the current date
   const currentDate = new Date();
   // change the updated_at field to current date
-  this.updated_at = currentDate;
+  this.updatedAt = currentDate;
   next();
 });
 
@@ -99,6 +100,17 @@ ConversationSchema.statics = {
       });
   },
 
+  findByProject(id) {
+    return this.findById(id)
+      .execAsync().then((user) => {
+        if (user) {
+          return user;
+        }
+        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
+  },
+
   /**
    * List users in descending order of 'createdAt' timestamp.
    * @param {number} skip - Number of users to be skipped.
@@ -106,7 +118,7 @@ ConversationSchema.statics = {
    * @returns {Promise<User[]>}
    */
   list({ skip = 0, limit = 50 } = {}) {
-    return this.find()
+    return this.find({lastAnswer: true})
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
