@@ -5,7 +5,7 @@
   const accounts = [
     {
       name: 'freelanser',
-      cookie: 'PHPSESSID=92pchk5hnpr9rhtikk0h2f7gf2',
+      cookie: 'PHPSESSID=jdtqkfjub4j6onreav939ta5m5',
     },
   ];
 module.exports.accs = accounts;

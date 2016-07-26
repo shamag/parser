@@ -7,7 +7,7 @@ var URL = 'https://www.fl.ru';
 var options = {
   headers: {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
-    'Cookie': 'PHPSESSID=92pchk5hnpr9rhtikk0h2f7gf2'
+    'Cookie': 'PHPSESSID=jdtqkfjub4j6onreav939ta5m5'
   }
 };
 var convToAdd=[];
@@ -16,6 +16,7 @@ let messToAdd;
 
 var q = tress(function (data, callback) {
   options.headers.Cookie = data.cookie;
+  console.log(data.cookie);
   needle.get(data.URL, options, function (err, res, body) {
 
     if (err) throw err;
@@ -36,7 +37,8 @@ var q = tress(function (data, callback) {
         projectId: prjId,
         profile: data.name,
         author: author,
-        projectName: name
+        projectName: name,
+
       };
 
       convToAdd.push(itemData);
@@ -49,13 +51,13 @@ var q = tress(function (data, callback) {
 
 q.drain = function () {
   convToAdd.map(function (conv, i) {
-   // console.log(conv.item);
+    //console.log(conv.item.projectId);
     needle.post('127.0.0.1:3000/api/conv', conv.item, function (err, resp,body) {
       function getLastMessage(url,opt){
         //console.log(url);
 
         needle.get(url, opt, function (err, res, body) {
-          console.log(URL+res.headers.location);
+          //console.log(URL+res.headers.location);
           needle.get(URL+res.headers.location,opt,function(err, res, body){
             let $ = cheerio.load(body);
             let $comments = $('[id ^="po_dialogue_talk"]');
@@ -63,8 +65,19 @@ q.drain = function () {
              // if (empname11) {
                 let lastMs = $comments.find('>div').last();
                 if (lastMs.find('>span').eq(0).hasClass('empname11')) {
-                  console.log('found',id);
-                  needle.put('127.0.0.1:3000/api/conv/'+id, {lastAnswer: true}, function (err, resp,body) {
+                  var dateStr = lastMs.find('[id^="po_date"]').html();
+                  dateStr=dateStr.substr(1,dateStr.length-2);
+                  var dateArr = dateStr.split('|');
+                  var day  = dateArr[0].split('.')[0];
+                  var month = dateArr[0].split('.')[1];
+                  var year = dateArr[0].split('.')[2].trim();
+                  var hour = dateArr[1].split(':')[0];
+                  var min = dateArr[1].split(':')[1].trim();
+                  var trueDate = new Date(Date.UTC(+year,+month-1,+day,+hour,+min));
+ 
+                  console.log('found',dateStr,trueDate);
+                 // var trueDate = new Date(year,month,day);
+                  needle.put('127.0.0.1:3000/api/conv/'+id, {lastAnswer: true, lastMessage: trueDate.getTime()}, function (err, resp,body) {
                     console.log(body);
                   })
                 }

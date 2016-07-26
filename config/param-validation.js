@@ -7,14 +7,15 @@ export default {
       profile: Joi.string().required(),
       author: Joi.string().required(),
       projectId: Joi.string().required(),
-      projectName: Joi.string().required()
+      projectName: Joi.string().required(),
+      //notes: Joi.string(),
     }
   },
 
   // UPDATE /api/users/:userId
   updateUser: {
     body: {
-     
+
     },
     params: {
       convId: Joi.string().hex().required()

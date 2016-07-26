@@ -56,6 +56,10 @@ app.use('/api', routes);
 app.get('/', function(req,res){
   res.render('index');
 });
+app.get('/archive', function(req,res){
+  res.render('archive');
+});
+
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {

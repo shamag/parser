@@ -119,7 +119,14 @@ ConversationSchema.statics = {
    */
   list({ skip = 0, limit = 50 } = {}) {
     return this.find({lastAnswer: true})
-      .sort({ createdAt: -1 })
+      .sort({ lastMessage: -1 })
+      .skip(skip)
+      .limit(limit)
+      .execAsync();
+  },
+  listAll({ skip = 0, limit = 200 } = {}) {
+    return this.find()
+      .sort({ lastMessage: -1 })
       .skip(skip)
       .limit(limit)
       .execAsync();

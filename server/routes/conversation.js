@@ -12,6 +12,10 @@ router.route('/')
   /** POST /api/users - Create new user */
   .post(validate(paramValidation.createUser), convCtrl.create);
 
+router.route('/all')
+/** GET /api/users - Get list of users */
+  .get(convCtrl.listAll)
+
 router.route('/:convId')
 /** GET /api/users/:userId - Get user */
   .get(convCtrl.get)

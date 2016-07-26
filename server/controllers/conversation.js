@@ -32,6 +32,7 @@ function create(req, res, next) {
         author: req.body.author,
         projectId: req.body.projectId,
         projectName: req.body.projectName
+        //lastAnswer: false
       });
 
       conv.saveAsync()
@@ -41,6 +42,7 @@ function create(req, res, next) {
         exConv.profile = req.body.profile;
         exConv.author = req.body.author;
         exConv.projectName = req.body.projectName;
+        exConv.lastAnswer = false;
 
       exConv.saveAsync()
         .then((savedUser) => res.json(savedUser))
@@ -69,8 +71,14 @@ function update(req, res, next) {
   conv.projectId = req.body.projectId;
   if (req.body.projectName)
   conv.projectName = req.body.projectName;
-  if (req.body.lastAnswer)
+  if (req.body.lastAnswer!==undefined)
     conv.lastAnswer = req.body.lastAnswer;
+  if (req.body.lastMessage)
+    conv.lastMessage = new Date().setTime(req.body.lastMessage);
+  if (req.body.notes!==undefined){
+    conv.notes = req.body.notes;}
+  else{}
+
   conv.saveAsync()
     .then((savedUser) => res.json(savedUser))
     .error((e) => next(e));
@@ -87,6 +95,11 @@ function list(req, res, next) {
   Conversation.list({ limit, skip }).then((convs) =>	res.json(convs))
     .error((e) => next(e));
 }
+function listAll(req, res, next) {
+  const { limit = 200, skip = 0 } = req.query;
+  Conversation.listAll({ limit, skip }).then((convs) =>	res.json(convs))
+    .error((e) => next(e));
+}
 
 /**
  * Delete user.
@@ -99,4 +112,4 @@ function remove(req, res, next) {
     .error((e) => next(e));
 }
 
-export default { load, get, create, update, list, remove };
+export default { load, get, listAll, create, update, list, remove };
